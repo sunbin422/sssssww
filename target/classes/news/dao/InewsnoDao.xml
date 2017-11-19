@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="news.dao.InewsnoDao">
+
+
+    <resultMap type="news.entity.newsno" id="menu_map2">
+    <id property="id" column="id"></id>
+    <result property="context" column="context"></result>
+    <result property="typeid" column="typeid"></result>
+        <result property="zan" column="zan"></result>
+        <result property="click" column="click"></result>
+        <result property="title" column="title"></result>
+        <result property="status" column="status"></result>
+        <result property="user" column="user"></result>
+        <result property="time" column="time"></result>
+        <result property="img" column="img"></result>
+        <association property="newstype"  javaType="news.entity.newstype">
+
+            <id property="id" column="id"></id>
+            <result property="typename" column="typename"></result>
+        </association>
+        <association property="stutas" javaType="news.entity.stutas">
+            <id property="stutasid" column="stutasid"></id>
+            <result property="stutasname" column="stutasname"></result>
+        </association>
+    </resultMap>
+
+    <insert id="addnews" >
+        INSERT INTO newsno(title,typeid,zan,click,user,time,context,status,titlecolor,quanzhong,huiyuan,selectword,job,img,contextone) VALUES (#{title},#{typeid},#{zan},#{click},#{user},#{time},#{context},#{status},#{titlecolor},#{quanzhong},#{huiyuan},#{selectword},#{job},#{img},#{contextone});
+    </insert>
+
+    <select id="newsList"   resultMap="menu_map2">
+        SELECT a.id,a.title,b.typename,a.img,a.zan ,a.click,d.stutasname,a.user,a.time,a.context FROM newsno as a , newstype as b,stutas as d WHERE a.typeid=b.id AND a.typeid=#{0} AND a.status=d.stutasid
+    </select>
+    <select id="newsListtwo" resultMap="menu_map2">
+        SELECT a.id,a.title,b.typename,a.zan ,a.img,a.click,d.stutasname,a.user,a.time,a.context FROM newsno as a , newstype as b,stutas as d
+        <where>
+            a.typeid=b.id AND  a.status=d.stutasid
+            <if test="status!=0">
+                AND   a.status=#{status}
+            </if>
+            <if test="title!=null">
+                AND a.title=#{title}
+            </if>
+
+        </where>
+    </select>
+    <select id="news"   resultType="news.entity.newsno">
+        SELECT * FROM newsno  WHERE id=#{id}
+    </select>
+    <delete id="delete" >
+        DELETE FROM newsno WHERE id=#{0}
+    </delete>
+</mapper>

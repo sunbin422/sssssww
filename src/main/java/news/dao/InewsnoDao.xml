@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="news.dao.InewsnoDao">
+
+
+    <resultMap type="news.entity.newsno" id="menu_map2">
+    <id property="id" column="id"></id>
+    <result property="context" column="context"></result>
+    <result property="typeid" column="typeid"></result>
+        <result property="zan" column="zan"></result>
+        <result property="click" column="click"></result>
+        <result property="title" column="title"></result>
+        <result property="user" column="user"></result>
+        <result property="time" column="time"></result>
+    <association property="newstype"  javaType="news.entity.newstype">
+
+        <id property="id" column="id"></id>
+        <result property="typename" column="typename"></result>
+    </association>
+        <association property="stutas" column="stutas">
+            <id property="id" column="id"></id>
+            <result property="stutasname" column="stutasname"></result>
+        </association>
+</resultMap>
+
+   <insert id="addnews" >
+       INSERT INTO newsno(title,typeid,zan,click,user,time,context,status,titlecolor,quanzhong,huiyuan,selectword,job,img,contextone) VALUES (#{title},#{typeid},#{zan},#{click},#{user},#{time},#{context},#{status},#{titlecolor},#{quanzhong},#{huiyuan},#{selectword},#{job},#{img},#{contextone});
+   </insert>
+
+    <select id="newsList"   resultMap="menu_map2">
+        SELECT a.id,a.title,b.typename,a.zan ,a.click,c.stutasname,a.user,a.time,a.context FROM newsno as a , newstype as b,stutas as c WHERE a.typeid=b.id AND a.typeid=#{0} AND a.stutas=c.id
+    </select>
+    <select id="newsListtwo" resultMap="menu_map2">
+        SELECT a.id,a.title,b.typename,a.zan ,a.click,c.stutasname,a.user,a.time,a.context FROM newsno as a , newstype as b,stutas as c
+        <where>
+            a.typeid=b.id AND  a.status=c.id
+            <if test="stutas!=0">
+          AND   a.status=#{stutas}
+            </if>
+            <if test="title!=null">
+                AND a.title=#{title}
+            </if>
+
+        </where>
+    </select>
+    <select id="news"   resultType="news.entity.newsno">
+        SELECT * FROM newsno  WHERE a.id=#{id}
+    </select>
+    <delete id="delete" >
+        DELETE FROM newsno WHERE id=#{0}
+    </delete>
+</mapper>

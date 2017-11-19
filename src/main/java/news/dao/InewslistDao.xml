@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="news.dao.InewslistDao">
+
+
+    <resultMap type="news.entity.newslist" id="menu_map">
+    <id property="id" column="id"></id>
+    <result property="text" column="text"></result>
+    <result property="url" column="url"></result>
+    <collection property="children"  column="id" ofType="news.entity.newss"
+                select="one"></collection>
+</resultMap>
+    <resultMap type="news.entity.newss" id="menu_map1">
+        <id property="id" column="id"></id>
+        <result property="text" column="text"></result>
+        <result property="url" column="url"></result>
+        <collection property="children"  column="id" ofType="news.entity.newss"
+                    select="two"></collection>
+    </resultMap>
+
+    <!-- 根据父键查询 -->
+    <select id="one"   resultMap="menu_map">
+        select * from newslist where pid=#{id}
+
+    </select>
+
+    <select id="two"   resultMap="menu_map1">
+        select * from newss where pid=#{id}
+
+    </select>
+</mapper>
